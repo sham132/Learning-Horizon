@@ -27,9 +27,9 @@ router.post('/login',function (req, res) {
                      email: user.email,
                      _id: user._id
                   },
-                  'secret', {
-                     expiresIn: '2h'
-                  });
+                   config.secret, {
+                     expiresIn: 86400 // expires in 24 hours
+                   });
                return res.status(200).json({
                   name: user.name,
                   email: user.email,
@@ -59,40 +59,6 @@ router.post('/login',function (req, res) {
 });
 router.post('/signup', function (req, res) {
 
-
-
-
-   // if (!req.body.name) {
-      
-   //    return res.json({
-   //       message: "Name can't be Empty"
-   //    })
-
-   // }
-   // if (!req.body.phone & req.body.phone.length >= 11) {
-   //    console.log(req.body.phone.length);
-   //    return res.json({
-   //       message: "Pleasae enter correct phone number"
-   //    })
-   // }
-   // if (!req.body.address && req.body.address.length <7) {
-   //    return res.json({
-   //       message: "Address can't be Empty"
-   //    })
-   // }
-
-   // function isEmailAddress(str) {
-   //    var pattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-   //    return pattern.test(str); // returns a boolean 
-   // }
-   // let checkemail = isEmailAddress(req.body.email);
-
-   // if (!req.body.email || checkemail === false) {
-   //    console.log(typeof (checkemail));
-   //    return res.json({
-   //       message: "Please enter correct email"
-   //    })
-   // }
 
    if (!req.body.password) {
       return res.json({

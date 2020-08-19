@@ -6,6 +6,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const Tutor = require('../models/tutor.model');
 const config = require('../config.json');
+const tokenChecker = require("../tokenChecker");
 
 
 router.post('/login',function (req, res) {   // Post API for Login Tutor Account
@@ -120,7 +121,7 @@ router.post('/signup', function (req, res) {    // POST Signup API for Turor Sig
 });
 
 
-router.get('/exploreTutor', function (req, res) {     // GET API for getting exploring tutor 
+router.get('/exploreTutor', tokenChecker, function (req, res) {     // GET API for getting exploring tutor 
 
    Tutor.find()
       .then(notes => {
