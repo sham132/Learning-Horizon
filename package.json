@@ -1,7 +1,7 @@
 {
   "name": "nodejwt",
   "version": "1.0.0",
-  "description": "Node js Express JWT Authentication Tutorial",
+  "description": "Student Managmanet Portal",
   "main": "server.js",
   "scripts": {
     "start": "nodemon server"
@@ -14,7 +14,7 @@
     "based",
     "Authentication"
   ],
-  "author": "Krunal Lathiya",
+  "author": "Maher Abubakar",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^4.0.1",

@@ -1,24 +1,28 @@
 const jwt = require('jsonwebtoken')
 const config = require('./config')
 
-module.exports = (req,res,next) => {
-  const token = req.body.token || req.query.token || req.headers['x-access-token']
+module.exports = (req, res, next) => {
+  const token = req.body.token || req.query.token || req.headers['token']
+
+  var decoded = jwt.decode(token, config.secret);
+  console.log("decoded : " +JSON.stringify(decoded)); //=> { foo: 'bar' }
+
+
+ // console.log("decodedJwt : " + decodedJwt)
   // decode token
   if (token) {
     // verifies secret and checks exp
-    jwt.verify(token, config.secret, function(err, decoded) {
-        if (err) {
-            return res.status(401).json({"error": true, "message": 'Unauthorized access.' });
-        }
-      req.decoded = decoded;
-      next();
+    jwt.verify(token, config.secret, function (err, decoded) {
+      if (err) {
+        return res.json({ success: false, message: 'Failed to authenticate token.' });
+      } else {
+        // if everything is good, save to request for use in other routes
+        req.decoded = decoded;
+        next();
+      }
     });
-  } else {
-    // if there is no token
-    // return an error
-    return res.status(403).send({
-        "error": true,
-        "message": 'No token provided.'
-    });
+  }
+  else {
+    return res.json({ success: false, message: 'Please add token header in the request.' });
   }
 }

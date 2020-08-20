@@ -5,9 +5,9 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const Tutor = require('../models/tutor.model');
+const User = require('../models/user.model');
 const config = require('../config.json');
 const tokenChecker = require("../tokenChecker");
-
 
 router.post('/login',function (req, res) {   // Post API for Login Tutor Account
     Tutor.findOne({
@@ -28,14 +28,15 @@ router.post('/login',function (req, res) {   // Post API for Login Tutor Account
                       email: user.email,
                       _id: user._id
                    },
-                   'secret', {
-                      expiresIn: '2h'
+                   config.secret, {
+                     expiresIn: 86400 // expires in 24 hours
                    });
                 return res.status(200).json({
                    name: user.name,
                    email: user.email,
                    token: JWTToken,
-                   accountType: user.accountType
+                   accountType: user.accountType,
+                   expertise : user.expertise
                 });
              }
             
@@ -121,11 +122,31 @@ router.post('/signup', function (req, res) {    // POST Signup API for Turor Sig
 });
 
 
-router.get('/exploreTutor', tokenChecker, function (req, res) {     // GET API for getting exploring tutor 
+function  studentExploreTokenValidation (req, res, next)
+{
+   const token = req.body.token || req.query.token || req.headers['token'];
+  // let parseToken = token.split(" ");
+  var decoded = jwt.decode(token, config.secret);
+  User.findOne({
+   email: decoded
+})
+.exec()
+.then(function (user) {
+   if(user)
+   {
+      next();
+   }
 
-   Tutor.find()
-      .then(notes => {
-         res.json(notes);
+});
+}
+
+
+
+router.get('/exploreTutor', function (req, res) {     // GET API for getting exploring tutor 
+
+   Tutor.find({},{name :"" , expertise:"" , email:'' , phone:'' , address:'' , createdAt:''})
+      .then(Tutor => {
+         res.json(Tutor);
       }).catch(err => {
          res.status(500).send({
             message: err.message || "Some error occurred while retrieving notes."

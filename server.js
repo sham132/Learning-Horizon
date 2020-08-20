@@ -6,29 +6,27 @@ const swaggerDocument =require('./swagger.json');
 const bodyParser = require('body-parser');
 const user = require('./routes/user.route');
 const tutor = require('./routes/tutor.route');
-/*  ---------------admin-----------------*/
-
-
-/*  ---------------order-----------------*/
+const addQuestion = require('./routes/addQuestion.route');
+const config = require('./config.json');
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/OrderManagmentSystem');
-const PORT = 3000;
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.get('/test', function(req, res){
+app.get('/testServer', function(req, res){
    res.json({
-      "Tutorial": "Server is running"
+      "Tutorial": `LEARNING HORIZON is running`
    });
 });
 app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-
 app.use(cors())
 app.use('/student', user);
 app.use('/tutor', tutor);
+app.use('/Questions', addQuestion);
 
-app.listen(PORT, function(){
-   console.log('Server is running on Port',PORT);
+app.listen(config.port, function(){
+   console.log(`LEARNING HORIZON is running on Port ${config.port}` );
 });
