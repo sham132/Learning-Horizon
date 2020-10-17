@@ -13,7 +13,7 @@ router.post('/addQuestionAnswer', tokenChecker ,function async (req, res) {   //
     
    
    addQuestions.findOne({
-      questionText: req.body.questionText
+      question: req.body.question
    })
    .exec()
    .then(function (question) {
@@ -30,12 +30,17 @@ router.post('/addQuestionAnswer', tokenChecker ,function async (req, res) {   //
             _id: new mongoose.Types.ObjectId(),
             questionId: req.body.questionId,
             subject: req.body.subject,
-            questionText: req.body.questionText,
-            options: req.body.options,
-            correctOption: req.body.correctOption,
-            status:1
+            question: req.body.question,
+            questionType: req.body.questionType,
+            answerSelectionType: req.body.answerSelectionType,
+            correctAnswer: req.body.correctAnswer,
+            messageForCorrectAnswer: req.body.messageForCorrectAnswer,
+            messageForIncorrectAnswer: req.body.messageForIncorrectAnswer,
+            explanation: req.body.explanation,
+            point: req.body.point,
+            answers: req.body.answers,
          });
-         console.log("tutor",req.body.options);
+         console.log("tutor",req.body.answers);
     
     
          addQuestion.save().then(function (result ) {
@@ -66,11 +71,30 @@ router.post('/addQuestionAnswer', tokenChecker ,function async (req, res) {   //
  });
  
 
+
+
 router.get('/getAllQuestion', tokenChecker, function (req, res) {     // GET API for getting exploring tutor 
 
-   addQuestions.find()
+
+
+   let subject = req.query.subject;
+   addQuestions.find({subject: subject}).exec()
       .then(notes => {
-         res.json({"Questions":notes});
+         console.log("notes : "+ notes)
+         if(notes.length >0 )
+         {
+            res.json({
+               "quizTitle": "Learning Horizon Quiz Portal For Tutor's",
+               "quizSynopsis": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim",
+               "questions":notes
+            
+            });
+         }
+         else
+         {
+            res.send(false);
+         }
+        
       }).catch(err => {
          res.status(500).send({
             message: err.message || "Some error occurred while retrieving notes."
@@ -81,8 +105,8 @@ router.get('/getAllQuestion', tokenChecker, function (req, res) {     // GET API
 
 
 router.get('/getQuestion', tokenChecker, function (req, res) {     // GET API for getting exploring tutor 
-   let subject = req.query.subject;
-   console.log("subject : " + subject);
+   let subject = req.query.subject.toLowerCase();
+   console.log("subject : " + subject.toLowerCase());
    addQuestions.find({subject: subject}).exec()
       .then(notes => {
          console.log(notes)
