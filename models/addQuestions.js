@@ -20,4 +20,4 @@ const AddQuestions = mongoose.Schema({
 { timestamps: true });
 
 
-module.exports = mongoose.model('addQuestionzz', AddQuestions);
+module.exports = mongoose.model('addQuestionsss', AddQuestions);

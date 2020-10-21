@@ -141,10 +141,26 @@ function  studentExploreTokenValidation (req, res, next)
 }
 
 
+router.post('/updateTutorStatus', function (req, res) {     // GET API for getting exploring tutor 
 
-router.get('/exploreTutor', function (req, res) {     // GET API for getting exploring tutor 
+   let email = req.query.email;
 
-   Tutor.find({},{name :"" , expertise:"" , email:'' , phone:'' , address:'' , createdAt:''})
+   let status = req.query.status;
+   Tutor.update({email:email}, {statusActive:status})
+      .then(Tutor => {
+         console.log(Tutor)
+         res.json(Tutor);
+      }).catch(err => {
+         res.status(500).send({
+            message: err.message || "Some error occurred while retrieving notes."
+         });
+      });
+});
+
+
+router.get('/exploreTutor', function (req, res) {     // GET API for getting exploring tutor
+
+   Tutor.find({statusActive:true},{name :"" , expertise:"" , email:'' , phone:'' , address:'' , createdAt:''})
       .then(Tutor => {
          res.json(Tutor);
       }).catch(err => {
@@ -153,4 +169,23 @@ router.get('/exploreTutor', function (req, res) {     // GET API for getting exp
          });
       });
 });
+
+
+
+router.get('/PassTutors', function (req, res) {     // GET API for getting exploring tutor
+   let email = req.query.email;
+
+   Tutor.find({email:email})
+      .then(Tutor => {
+         res.json(Tutor);
+      }).catch(err => {
+         res.status(500).send({
+            message: err.message || "Some error occurred while retrieving notes."
+         });
+      });
+});
+
+
+
+
 module.exports = router;

@@ -85,7 +85,7 @@ router.get('/getAllQuestion', tokenChecker, function (req, res) {     // GET API
          {
             res.json({
                "quizTitle": "Learning Horizon Quiz Portal For Tutor's",
-               "quizSynopsis": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim",
+               "quizSynopsis": "Learning Horizon started in 2000 with Speech & Drama as well as camps primarily for preschool children. Our trainers are hand-picked and undergo extensive in-house training with regular assessments.",
                "questions":notes
             
             });
@@ -117,4 +117,10 @@ router.get('/getQuestion', tokenChecker, function (req, res) {     // GET API fo
          });
       });
 });
+
+
+
+
+
+
 module.exports = router;
