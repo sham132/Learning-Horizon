@@ -5,7 +5,10 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const addQuestions = require('../models/addQuestions');
+const generateFee = require('../models/generateFee');
+const subjectFee = require('../models/subjectFee');   
 const config = require('../config.json');
+const User = require('../models/user.model');
 const tokenChecker = require("../tokenChecker");
 
 
@@ -71,6 +74,232 @@ router.post('/addQuestionAnswer', tokenChecker ,function async (req, res) {   //
  });
  
 
+
+
+
+
+ router.post('/addSubjectFee' ,function async (req, res) {   // Post API for Login Tutor Account
+    
+   const subject =req.body.subject;
+   const fee= req.body.fee;
+   
+   subjectFee.find({
+      subject: req.body.subject,
+      fee :req.body.fee
+
+   })
+   .exec()
+   .then(function (question) {
+      console.log("duplicate Entry :"  + question )
+      if(question)
+      {
+         return res.status(500).json({
+            error : "Duplicate entry for Subject Fee!!"
+         })
+      }
+      else
+      {
+         let subjectfee = new subjectFee({
+            _id: new mongoose.Types.ObjectId(),
+            subject: req.body.subject,
+            fee: req.body.fee,
+          
+         });
+         console.log("fee",req.body.answers);
+    
+    
+         subjectfee.save().then(function (result ) {
+          
+             res.status(200).json({
+                Success: result
+             });
+            
+          
+         }).catch(error => {
+          return   res.status(500).json({
+               error: error
+            });
+         });
+      }
+
+   }).catch(error => {
+      return   res.status(500).json({
+           error: error
+        });
+     });
+   
+
+
+    
+
+
+ });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ router.post('/generateFee' , async (req, res) => {   // Post API for Login Tutor Account
+    
+   
+
+   //let users = await User.find({});
+
+ 
+ const student= req.body.student;
+ const subject= req.body.student;
+ const date= req.body.date;
+ const fee= req.body.fee;
+
+
+ 
+ generateFee.findOne({
+     
+   subject:req.body.subject,
+   date:req.body.date,
+   student:req.body.student
+
+})
+.exec()
+.then(function (question) {
+   console.log("duplicate Entry :"  + question )
+   if(question > 0)
+   {
+      return res.status(200).json({
+         error : "This Month Fee Voucher is Already Generated !!!"
+      })
+   }
+   else
+   {
+
+
+   
+
+      subjectFee.find({
+     
+      subject:req.body.subject,
+
+
+   })
+   .exec()
+   .then(function (question) {
+      console.log("duplicate Entry :"  + question[0].fee )
+      if(question > 0)
+      {
+         return res.status(200).json({
+            error : "This Month Fee Voucher is Already Generated !!!"
+         })
+      }
+      else
+      {
+            let generateee = new generateFee({
+            _id: new mongoose.Types.ObjectId(),
+            student: req.body.student,
+            date: req.body.date,
+            fee: question[0].fee,
+            subject:req.body.subject
+
+           
+         });
+       
+
+         generateee.save().then(function (result ) {
+          
+             res.status(200).json({
+                Success: result
+             });
+            
+          
+         }).catch(error => {
+          return   res.status(200).json({
+               error: error
+            });
+      
+      }).catch(error => {
+         return   res.status(200).json({
+              error: error
+           });
+        });
+      }
+      
+      
+
+  
+         });
+      }
+   })
+
+
+   // generateFee.findOne({
+   //    date: req.body.date
+   // })
+   // .exec()
+   // .then(function (question) {
+   //    console.log("duplicate Entry :"  + question )
+   //    if(question)
+   //    {
+   //       return res.status(500).json({
+   //          error : "This Month Fee Voucher is Already Generated !!!"
+   //       })
+   //    }
+   //    else
+   //    {
+   //       let addQuestion = new addQuestions({
+   //          _id: new mongoose.Types.ObjectId(),
+   //          questionId: req.body.questionId,
+   //          subject: req.body.subject,
+   //          question: req.body.question,
+   //          questionType: req.body.questionType,
+   //          answerSelectionType: req.body.answerSelectionType,
+   //          correctAnswer: req.body.correctAnswer,
+   //          messageForCorrectAnswer: req.body.messageForCorrectAnswer,
+   //          messageForIncorrectAnswer: req.body.messageForIncorrectAnswer,
+   //          explanation: req.body.explanation,
+   //          point: req.body.point,
+   //          answers: req.body.answers,
+   //       });
+   //       console.log("tutor",req.body.answers);
+    
+    
+   //       addQuestion.save().then(function (result ) {
+          
+   //           res.status(200).json({
+   //              Success: result
+   //           });
+            
+          
+   //       }).catch(error => {
+   //        return   res.status(500).json({
+   //             error: error
+   //          });
+   //       });
+   //    }
+
+   // }).catch(error => {
+   //    return   res.status(500).json({
+   //         error: error
+   //      });
+   //   });
+   
+
+
+    
+
+
+ });
+ 
 
 
 router.get('/getAllQuestion', tokenChecker, function (req, res) {     // GET API for getting exploring tutor 
