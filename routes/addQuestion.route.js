@@ -85,20 +85,12 @@ router.post('/addQuestionAnswer', tokenChecker ,function async (req, res) {   //
    
    subjectFee.find({
       subject: req.body.subject,
-      fee :req.body.fee
 
    })
    .exec()
    .then(function (question) {
-      console.log("duplicate Entry :"  + question )
-      if(question)
-      {
-         return res.status(500).json({
-            error : "Duplicate entry for Subject Fee!!"
-         })
-      }
-      else
-      {
+      console.log("duplicate Entry :"  + question != null )
+     
          let subjectfee = new subjectFee({
             _id: new mongoose.Types.ObjectId(),
             subject: req.body.subject,
@@ -120,7 +112,7 @@ router.post('/addQuestionAnswer', tokenChecker ,function async (req, res) {   //
                error: error
             });
          });
-      }
+      
 
    }).catch(error => {
       return   res.status(500).json({
@@ -195,7 +187,7 @@ router.post('/addQuestionAnswer', tokenChecker ,function async (req, res) {   //
    })
    .exec()
    .then(function (question) {
-      console.log("duplicate Entry :"  + question[0].fee )
+      console.log("duplicate Entry :"  + question[0] )
       if(question > 0)
       {
          return res.status(200).json({
@@ -214,7 +206,7 @@ router.post('/addQuestionAnswer', tokenChecker ,function async (req, res) {   //
            
          });
        
-
+         console.log("generateee : "+ generateee);
          generateee.save().then(function (result ) {
           
              res.status(200).json({
@@ -300,6 +292,32 @@ router.post('/addQuestionAnswer', tokenChecker ,function async (req, res) {   //
 
  });
  
+
+ router.get('/getStudentInvoice', function (req, res) {     // GET API for getting exploring tutor 
+
+   let student = req.query.student;
+   console.log("student : "+ student)
+   generateFee.find({student: student}).exec()
+      .then(fees => {
+         console.log("fees : "+ fees)
+         if(fees.length >0 )
+         {
+            res.json({
+              "Results": fees[0]
+            });
+         }
+         else
+         {
+            res.send(false);
+         }
+        
+      }).catch(err => {
+         res.status(500).send({
+            message: err.message || "Some error occurred while retrieving notes."
+         });
+      });
+
+ })
 
 
 router.get('/getAllQuestion', tokenChecker, function (req, res) {     // GET API for getting exploring tutor 
