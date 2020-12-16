@@ -3,6 +3,7 @@ var cors = require('cors')
 const router = express.Router();
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const smtpTransport = require('nodemailer-smtp-transport');
 const jwt = require('jsonwebtoken');
 const addQuestions = require('../models/addQuestions');
 const generateFee = require('../models/generateFee');
@@ -11,6 +12,15 @@ const config = require('../config.json');
 const User = require('../models/user.model');
 const tokenChecker = require("../tokenChecker");
 
+const nodemailer = require('nodemailer');
+let transporter = nodemailer.createTransport(smtpTransport({    
+     service: 'gmail',
+     host: 'smtp.gmail.com', 
+     auth: {        
+          user: 'ehtashamk40@gmail.com',        
+          pass: 'khang.com'    
+     }
+}))
 
 router.post('/addQuestionAnswer', tokenChecker ,function async (req, res) {   // Post API for Login Tutor Account
     
@@ -74,7 +84,27 @@ router.post('/addQuestionAnswer', tokenChecker ,function async (req, res) {   //
  });
  
 
-
+ router.post("/sendMail", function(req,res){
+   var to = req.body.email,
+       subject = "Meeting Link", 
+       message = req.body.link;
+   //options
+   console.log("to : "+ to + " message :"+ message)
+   const mailOptions = {
+        from: 'ehtashamk40@gmail.com',
+        to: to,                   // from req.body.to
+        subject: subject,         //from req.body.subject
+        html: message             //from req.body.message
+    };
+   //delivery
+   transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+            console.log(error);  
+        } else {     
+            console.log('Email sent: ' + info.response);  
+        }   
+   });
+});
 
 
 

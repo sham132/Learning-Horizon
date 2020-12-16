@@ -23,6 +23,8 @@
     "express": "^4.16.3",
     "jsonwebtoken": "^8.1.1",
     "mongoose": "^5.0.3",
+    "nodemailer": "^6.4.17",
+    "nodemailer-smtp-transport": "^2.7.4",
     "swagger-ui-express": "^4.0.7",
     "validator": "^11.1.0"
   },
